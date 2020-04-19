@@ -9,10 +9,13 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/react"]
+          }
         }
       },
       {
@@ -24,6 +27,9 @@ module.exports = {
         use: "file-loader"
       }
     ]
+  },
+  resolve: {
+    extensions: [".js", ".jsx"]
   },
   plugins: [
     new CleanWebpackPlugin({
