@@ -1,3 +1,5 @@
+import Phaser from "phaser";
+
 export default class Player {
   constructor(scene) {
     this.scene = scene;
@@ -28,10 +30,18 @@ export default class Player {
     this.dy *= 0.97;
 
     // Clamp dx + dy to max speed.
-    if (Math.abs(this.dx) > this.maxSpeed) {
+    const xRatio = Math.abs(this.maxSpeed / this.dx);
+    const yRatio = Math.abs(this.maxSpeed / this.dy);
+    const highXSpeed = Math.abs(this.dx) > this.maxSpeed;
+    const highYSpeed = Math.abs(this.dy) > this.maxSpeed;
+    if (highXSpeed && highYSpeed) {
+      this.dx *= Math.max(xRatio, yRatio);
+      this.dy *= Math.max(xRatio, yRatio);
+    }
+    else if (highXSpeed) {
       this.dx *= Math.abs(this.maxSpeed / this.dx);
     }
-    if (Math.abs(this.dy) > this.maxSpeed) {
+    else if (highYSpeed) {
       this.dy *= Math.abs(this.maxSpeed / this.dy);
     }
 

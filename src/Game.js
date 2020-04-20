@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import playerShip1_orange from "./assets/playerShip1_orange.png";
+import spaceShips_004 from "./assets/spaceShips_004.png";
 import Player from "./Player";
+import Enemy from "./Enemy";
 
 export const parent = 'scene-game';
 export default class Game {
@@ -23,6 +25,7 @@ export default class Game {
 
   preload() {
     this.scene.load.image('playerShip1_orange', playerShip1_orange);
+    this.scene.load.image('spaceShips_004', spaceShips_004);
 
     const w = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     const a = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -37,9 +40,11 @@ export default class Game {
 
   create() {
     this.player = new Player(this.scene);
+    this.enemies = [new Enemy(this.scene)];
   }
 
   update() {
-    this.player.update(this.keys)
+    this.player.update(this.keys);
+    this.enemies.forEach(enemy => enemy.update());
   }
 }
