@@ -1,10 +1,9 @@
 import React, {useEffect} from "react";
-import Phaser from "phaser";
-import {parent, config} from "./config";
+import Game, {parent} from "./Game";
 
 const App = () => {
   useEffect(() => {
-    new Phaser.Game(config);
+    new Game();
   }, []);
 
   return (
