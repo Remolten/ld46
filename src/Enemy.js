@@ -1,7 +1,8 @@
 export default class Enemy {
   constructor(scene) {
     this.scene = scene;
-    this.sprite = scene.add.sprite(scene.cameras.main.width, 0, 'spaceShips_004');
+    this.sprite = scene.physics.add.sprite(scene.cameras.main.width, 0, 'spaceShips_004');
+    this.sprite.update = this.update.bind(this);
 
     this.dx = 0;
     this.dy = 0;

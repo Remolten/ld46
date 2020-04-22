@@ -1,12 +1,13 @@
 import Phaser from "phaser";
+import Laser from "./Laser";
 
 export default class Player {
   constructor(scene) {
     this.scene = scene;
-    this.sprite = scene.add.sprite(scene.cameras.main.centerX, scene.cameras.main.centerY, 'playerShip1_orange');
+    this.sprite = scene.physics.add.sprite(0, 0, 'playerShip1_orange');
+    this.sprite.update = this.update.bind(this);
 
-    this.dx = 0;
-    this.dy = 0;
+    this.laserCooldown = 15;
     this.speed = 0.8;
     this.boostSpeed = 2;
     this.dropMovement = 0.2;
@@ -14,7 +15,23 @@ export default class Player {
     this.angularVelocity = 2 * Math.PI / 60;
   }
 
-  update(keys) {
+  init() {
+    this.sprite.x = this.scene.cameras.main.centerX;
+    this.sprite.y = this.scene.cameras.main.centerY;
+    this.laserCooldownCounter = 0;
+    this.dx = 0;
+    this.dy = 0;
+  }
+
+  update(keys, lasers) {
+    /// Lasers ///
+    this.laserCooldownCounter += 1;
+    if (keys.space.isDown && this.laserCooldownCounter >= this.laserCooldown) {
+      this.laserCooldownCounter = 0;
+      lasers.add(new Laser(this.scene, this.sprite.x, this.sprite.y, this.sprite.rotation).sprite);
+    }
+
+    /// Movement ///
     let speed = this.speed;
     if (keys.shift.isDown) {
       speed = this.boostSpeed;

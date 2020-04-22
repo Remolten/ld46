@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import playerShip1_orange from "./assets/playerShip1_orange.png";
+import laserBlue06 from "./assets/laserBlue06.png";
 import spaceShips_004 from "./assets/spaceShips_004.png";
 import Player from "./Player";
 import Enemy from "./Enemy";
@@ -17,7 +18,10 @@ export default class Game {
       parent,
       width: 1200,
       height: 800,
-      scene: this.scene
+      scene: this.scene,
+      physics: {
+        default: 'arcade'
+      }
     };
 
     new Phaser.Game(config);
@@ -25,6 +29,7 @@ export default class Game {
 
   preload() {
     this.scene.load.image('playerShip1_orange', playerShip1_orange);
+    this.scene.load.image('laserBlue06', laserBlue06);
     this.scene.load.image('spaceShips_004', spaceShips_004);
 
     const w = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -40,11 +45,23 @@ export default class Game {
 
   create() {
     this.player = new Player(this.scene);
-    this.enemies = [new Enemy(this.scene)];
+    this.enemies = this.scene.physics.add.group();
+    this.lasers = this.scene.physics.add.group();
+
+    this.init();
+  }
+
+  init() {
+    this.player.init();
+    this.enemies.clear();
+    this.lasers.clear();
+
+    this.enemies.add(new Enemy(this.scene).sprite);
   }
 
   update() {
-    this.player.update(this.keys);
-    this.enemies.forEach(enemy => enemy.update());
+    this.player.update(this.keys, this.lasers);
+    this.enemies.getChildren().forEach(enemy => enemy.update());
+    this.lasers.getChildren().forEach(laser => laser.update());
   }
 }
