@@ -46,7 +46,9 @@ export default class Game {
   create() {
     this.player = new Player(this.scene);
     this.enemies = this.scene.physics.add.group();
-    this.lasers = this.scene.physics.add.group();
+    this.lasers = this.scene.physics.add.group({
+      defaultKey: 'laserBlue06'
+    });
 
     this.init();
   }
@@ -62,6 +64,5 @@ export default class Game {
   update() {
     this.player.update(this.keys, this.lasers);
     this.enemies.getChildren().forEach(enemy => enemy.update());
-    this.lasers.getChildren().forEach(laser => laser.update());
   }
 }

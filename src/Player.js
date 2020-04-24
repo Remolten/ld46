@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import Laser from "./Laser";
 
 export default class Player {
   constructor(scene) {
@@ -8,6 +7,7 @@ export default class Player {
     this.sprite.update = this.update.bind(this);
 
     this.laserCooldown = 15;
+    this.laserSpeed = 700;
     this.speed = 0.8;
     this.boostSpeed = 2;
     this.dropMovement = 0.2;
@@ -23,12 +23,22 @@ export default class Player {
     this.dy = 0;
   }
 
-  update(keys, lasers) {
+  shoot(lasersGroup) {
+    const laser = lasersGroup.create(this.sprite.x, this.sprite.y);
+    laser.rotation = this.sprite.rotation;
+
+    laser.setVelocity(
+      Math.cos(this.sprite.rotation - Math.PI / 2) * this.laserSpeed,
+      Math.sin(this.sprite.rotation - Math.PI / 2) * this.laserSpeed
+    );
+  }
+
+  update(keys, lasersGroup) {
     /// Lasers ///
     this.laserCooldownCounter += 1;
     if (keys.space.isDown && this.laserCooldownCounter >= this.laserCooldown) {
       this.laserCooldownCounter = 0;
-      lasers.add(new Laser(this.scene, this.sprite.x, this.sprite.y, this.sprite.rotation).sprite);
+      this.shoot(lasersGroup);
     }
 
     /// Movement ///
